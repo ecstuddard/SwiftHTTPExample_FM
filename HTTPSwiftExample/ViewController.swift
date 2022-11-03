@@ -15,6 +15,8 @@
 //    ifconfig |grep inet   
 // to see what your public facing IP address is, the ip address can be used here
 //let SERVER_URL = "http://erics-macbook-pro.local:8000" // change this for your server name!!!
+
+
 let SERVER_URL = "http://10.8.116.92:8000" // change this for your server name!!!
 
 import UIKit
@@ -25,13 +27,16 @@ class ViewController: UIViewController, URLSessionDelegate {
     var floatValue = 5.5
     let operationQueue = OperationQueue()
     @IBOutlet weak var mainTextView: UITextView!
+    @IBOutlet weak var ipTextField: UITextField!
     
     let animation = CATransition()
     
+    //MARK: Setup Session and Animation 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        // setup URL Session
         let sessionConfig = URLSessionConfiguration.ephemeral
         
         sessionConfig.timeoutIntervalForRequest = 5.0
@@ -53,11 +58,22 @@ class ViewController: UIViewController, URLSessionDelegate {
     //MARK: Get Request
     @IBAction func sendGetRequest(_ sender: AnyObject) {
         // create a GET request and get the reponse back as NSData
-        let baseURL = "\(SERVER_URL)/GetExample"
-        let query = "?arg=\(self.floatValue)"
+        guard let serverURL = getServerURL(endpoint: "/GetExample", query: "?arg=\(self.floatValue)") else { return }
+                var request = URLRequest(url: serverURL)
+                sendRequest(request: request)
         
-        let getUrl = URL(string: "\(baseURL)\(query)")
-        let request: URLRequest = URLRequest(url: getUrl!)
+    }
+    
+    //MARK: Post Request, args in url
+    @IBAction func sendPostRequest(_ sender: AnyObject) {
+        guard let serverURL = getServerURL(endpoint: "/DoPost") else { return }
+                var request = URLRequest(url: serverURL)
+                
+                let requestBody: Data? = "arg1=\(self.floatValue)".data(using: .utf8)
+                request.httpMethod = "POST"
+                request.httpBody = requestBody
+                sendRequest(request: request)
+        
         let dataTask : URLSessionDataTask = self.session.dataTask(with: request,
             completionHandler:{(data, response, error) in
                 // TODO: handle error!
@@ -72,57 +88,19 @@ class ViewController: UIViewController, URLSessionDelegate {
         })
         
         dataTask.resume() // start the task
-        
-    }
     
-    //MARK: Post Request, args in url
-    @IBAction func sendPostRequest(_ sender: AnyObject) {
-        
-        let baseURL = "\(SERVER_URL)/DoPost"
-        let postUrl = URL(string: "\(baseURL)")
-        
-        // create a custom HTTP POST request
-        var request = URLRequest(url: postUrl!)
-        
-        // data to send in body of post request (style of get arguments)
-        let requestBody:Data? = "arg1=\(self.floatValue)".data(using: String.Encoding.utf8, allowLossyConversion: false)
-        
-        request.httpMethod = "POST"
-        request.httpBody = requestBody
-        
-        let postTask : URLSessionDataTask = self.session.dataTask(with: request,
-            completionHandler:{(data, response, error) in
-                // TODO: handle error!
-                print("Response:\n%@",response!)
-                let jsonDictionary = self.convertDataToDictionary(with: data)
-                
-                // show to screen
-                DispatchQueue.main.async{
-                    self.mainTextView.layer.add(self.animation, forKey: nil)
-                    self.mainTextView.text = "\(response!) \n==================\n\(jsonDictionary)"
-                }
-        })
-        
-        postTask.resume() // start the task
     }
     
     //MARK: Post Request, args in request body (preferred)
     @IBAction func sendPostWithJsonInBody(_ sender: AnyObject) {
-        
-        let baseURL = "\(SERVER_URL)/PostWithJson"
-        let postUrl = URL(string: "\(baseURL)")
-        
-        // create a custom HTTP POST request
-        var request = URLRequest(url: postUrl!)
-        
-        // data to send in body of post request (send arguments as json)
-        let jsonUpload:NSDictionary = ["arg":[3.2,self.floatValue*2,self.floatValue]]
-        
-        
-        let requestBody:Data? = self.convertDictionaryToData(with:jsonUpload)
-    
-        request.httpMethod = "POST"
-        request.httpBody = requestBody
+        guard let serverURL = getServerURL(endpoint: "/PostWithJson") else { return }
+               var request = URLRequest(url: serverURL)
+               
+               let jsonUpload: NSDictionary = ["arg": [3.2, self.floatValue * 2, self.floatValue]]
+               request.httpMethod = "POST"
+               request.httpBody = convertDictionaryToData(with: jsonUpload)
+               sendRequest(request: request)
+
         
         let postTask : URLSessionDataTask = self.session.dataTask(with: request,
                         completionHandler:{(data, response, error) in
@@ -138,6 +116,11 @@ class ViewController: UIViewController, URLSessionDelegate {
         postTask.resume() // start the task
         
     }
+    //MARK: Helper to get URL from Text Field
+    private func getServerURL(endpoint: String, query: String = "") -> URL? {
+        guard let ipAddress = ipTextField.text, !ipAddress.isEmpty else { return nil }
+        return URL(string: "http://\(ipAddress):8000\(endpoint)\(query)")
+        }
     
     //MARK: JSON Conversion Functions
     func convertDictionaryToData(with jsonUpload:NSDictionary) -> Data?{
@@ -148,6 +131,25 @@ class ViewController: UIViewController, URLSessionDelegate {
             print("json error: \(error.localizedDescription)")
             return nil
         }
+    }
+    
+    //MARK: Send Request
+    private func sendRequest(request: URLRequest) {
+        let dataTask = self.session.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            print("Response:\n\(response!)")
+                
+                // Convert to string for display
+            let strData = String(data: data, encoding: .utf8) ?? "No data"
+            DispatchQueue.main.async {
+                self.mainTextView.layer.add(self.animation, forKey: nil)
+                self.mainTextView.text = "\(response!) \n==================\n\(strData)"
+            }
+        }
+        dataTask.resume()
     }
     
     func convertDataToDictionary(with data:Data?)->NSDictionary{
@@ -163,6 +165,7 @@ class ViewController: UIViewController, URLSessionDelegate {
             return NSDictionary() // just return empty
         }
     }
+    
 
 }
 
