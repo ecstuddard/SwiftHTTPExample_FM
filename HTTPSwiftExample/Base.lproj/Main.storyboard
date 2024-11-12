@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -19,7 +19,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q83-th-e1u">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q83-th-e1u">
                                 <rect key="frame" x="16" y="28" width="124" height="30"/>
                                 <state key="normal" title="Send Get Request">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -28,7 +28,7 @@
                                     <action selector="sendGetRequest:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="bFr-sd-tCK"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kXJ-SL-qGM">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kXJ-SL-qGM">
                                 <rect key="frame" x="16" y="66" width="130" height="30"/>
                                 <state key="normal" title="Send Post Request">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -78,6 +78,7 @@
                             <constraint firstItem="hnx-72-uCy" firstAttribute="top" secondItem="kXJ-SL-qGM" secondAttribute="bottom" constant="8" symbolic="YES" id="UgK-H7-DDr"/>
                             <constraint firstItem="hnx-72-uCy" firstAttribute="leading" secondItem="I7R-07-pqO" secondAttribute="leading" id="WkB-OQ-lZK"/>
                             <constraint firstItem="I7R-07-pqO" firstAttribute="top" secondItem="hnx-72-uCy" secondAttribute="bottom" constant="19" id="Wy5-SB-4g0"/>
+                            <constraint firstItem="kXJ-SL-qGM" firstAttribute="top" secondItem="Q83-th-e1u" secondAttribute="bottom" constant="20" id="bsT-AQ-A0q"/>
                             <constraint firstItem="I7R-07-pqO" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="ioU-ed-56v"/>
                             <constraint firstItem="hnx-72-uCy" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="104" id="j02-9G-dt2"/>
                             <constraint firstItem="hnx-72-uCy" firstAttribute="leading" secondItem="kXJ-SL-qGM" secondAttribute="leading" id="pNL-na-EnT"/>
@@ -86,7 +87,6 @@
                     </view>
                     <connections>
                         <outlet property="ipTextField" destination="aoZ-7N-xc9" id="clQ-Xv-SJe"/>
-                        <outlet property="ipTextView" destination="aoZ-7N-xc9" id="8Yg-gT-x0E"/>
                         <outlet property="mainTextView" destination="I7R-07-pqO" id="sEf-ID-vJd"/>
                     </connections>
                 </viewController>
