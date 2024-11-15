@@ -17,7 +17,7 @@
 //let SERVER_URL = "http://erics-macbook-pro.local:8000" // change this for your server name!!!
 
 
-let SERVER_URL = "http://10.8.116.92:8000" // change this for your server name!!!
+let SERVER_URL = "http://192.168.1.235:8000" // change this for your server name!!!
 
 import UIKit
 
@@ -118,7 +118,7 @@ class ViewController: UIViewController, URLSessionDelegate {
     }
     //MARK: Helper to get URL from Text Field
     private func getServerURL(endpoint: String, query: String = "") -> URL? {
-        guard let ipAddress = ipTextField.text, !ipAddress.isEmpty else { return nil }
+        guard let ipAddress = ipTextField.text, !ipAddress.isEmpty else { return URL(string: "\(SERVER_URL)\(endpoint)\(query)") }
         return URL(string: "http://\(ipAddress):8000\(endpoint)\(query)")
         }
     
